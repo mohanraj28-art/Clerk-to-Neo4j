@@ -14,6 +14,24 @@ public class User {
     private Long lastSignInAt;
     private Long createdAt;
     private Long updatedAt;
+    private java.time.LocalDateTime joiningDate;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public java.time.LocalDateTime getJoiningDate() {
+        return joiningDate;
+    }
+
+    public void setJoiningDate(java.time.LocalDateTime joiningDate) {
+        this.joiningDate = joiningDate;
+    }
 
     public String getClerkId() {
         return clerkId;

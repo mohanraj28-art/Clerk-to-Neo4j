@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,9 @@ public class WebhookControllerTest {
             "email_addresses": [{"email_address": "test@example.com"}],
             "first_name": "Test",
             "last_name": "User",
-            "image_url": "http://example.com/avatar.png"
+            "image_url": "http://example.com/avatar.png",
+            "created_at": 1672531200000,
+            "public_metadata": {"role": "admin"}
           },
           "type": "user.created"
         }
@@ -53,6 +54,8 @@ public class WebhookControllerTest {
         .andExpect(content().string("User synced to Neo4j"));
 
     verify(webhookVerifier).verify(any(), any(), any());
-    verify(userRepository).save(any(User.class));
+    verify(userRepository).save(org.mockito.ArgumentMatchers.argThat(user -> user.getJoiningDate() != null &&
+        user.getJoiningDate().getYear() > 2000 &&
+        "admin".equals(user.getRole())));
   }
 }

@@ -72,6 +72,10 @@ public class WebhookController {
             user.setLastName(data.getLast_name());
             user.setImageUrl(data.getImage_url());
             user.setCreatedAt(data.getCreated_at());
+            if (data.getCreated_at() != null) {
+                user.setJoiningDate(java.time.Instant.ofEpochMilli(data.getCreated_at())
+                        .atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+            }
             user.setUpdatedAt(data.getUpdated_at());
             user.setLastSignInAt(data.getLast_sign_in_at());
 
@@ -79,6 +83,10 @@ public class WebhookController {
                 user.setEmail(data.getEmail_addresses().get(0).getEmail_address());
             } else {
                 log.warn("No email addresses found for user {}", data.getId());
+            }
+
+            if (data.getPublic_metadata() != null && data.getPublic_metadata().containsKey("role")) {
+                user.setRole((String) data.getPublic_metadata().get("role"));
             }
 
             try {
@@ -188,6 +196,16 @@ public class WebhookController {
 
         public void setEmail_addresses(List<EmailAddress> email_addresses) {
             this.email_addresses = email_addresses;
+        }
+
+        private java.util.Map<String, Object> public_metadata;
+
+        public java.util.Map<String, Object> getPublic_metadata() {
+            return public_metadata;
+        }
+
+        public void setPublic_metadata(java.util.Map<String, Object> public_metadata) {
+            this.public_metadata = public_metadata;
         }
     }
 
